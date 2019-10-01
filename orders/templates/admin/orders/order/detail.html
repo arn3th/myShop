@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  <link rel="stylesheet" type="text/css" href="{% static "css/admin.css" %}" />
+{% endblock %}
+
+{% block title %}
+  Zamówienie {{ order.id }} {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url "admin:index" %}">Strona początkowa</a> &rsaquo;
+    <a href="{% url "admin:orders_order_changelist" %}">Zamówienia</a> &rsaquo;
+    <a href="{% url "admin:orders_order_change" order.id %}">Zamówienie {{ order.id }}</a> &rsaquo; Informacje szczegółowe
+  </div>
+{% endblock %}
+
+{% block content %}
+<h1>Zamówienie {{ order.id }}</h1>
+<ul class="object-tools">
+  <li>
+    <a href="#" onclick="window.print();">Drukuj zamówienie</a>
+  </li>
+</ul>
+<table>
+  <tr>
+    <th>Utworzone</th>
+    <td>{{ order.created }}</td>
+  </tr>
+  <tr>
+    <th>Klient</th>
+    <td>{{ order.first_name }} {{ order.last_name }}</td>
+  </tr>
+  <tr>
+    <th>E-mail</th>
+    <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+  </tr>
+  <tr>
+    <th>Adres</th>
+    <td>{{ order.address }}, {{ order.postal_code }} {{ order.city }}</td>
+  </tr>
+  <tr>
+    <th>Wartość całkowita</th>
+    <td>{{ order.get_total }} zł</td>
+  </tr>
+  <tr>
+    <th>Stan</th>
+    <td>{% if order.paid %}Opłacone{% else %}Oczekiwanie na płatność{% endif %}</td>
+  </tr>
+</table>
+
+<div class="module">
+  <div class="tabular inline-related last-related">
+    <table>
+      <h2>Kupione produkty</h2>
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th>Cena</th>
+          <th>Ilość</th>
+          <th>Razem</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+          <tr class="row{% cycle "1" "2" %}">
+            <td>{{ item.product.name }}</td>
+            <td class="num">{{ item.price }} zł</td>
+            <td class="num">{{ item.quantity }}</td>
+            <td class="num">{{ item.get_cost }} zł</td>
+          </tr>
+        {% endfor %}
+        <tr class="total">
+          <td colspan="3">Wartość całkowita</td>
+          <td class="num">{{ order.get_total }} zł</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

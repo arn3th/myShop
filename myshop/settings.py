@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-from .secret_settings import SECRET_KEY as S_KEY
+from braintree import Configuration, Environment
+from .secret_settings import SECRET_KEY as S_KEY, BRAINTREE_PRIVATE_KEY as B_PKEY
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'payment.apps.PaymentConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,18 @@ CART_SESSION_ID = 'cart'
 SESSION_COOKIE_AGE = 300
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Ustawienia Braintree
+BRAINTREE_MERCHANT_ID = 'kfjtcgbndm6xpg5d'
+BRAINTREE_PUBLIC_KEY = 'mtg9std479y3fgs5'
+BRAINTREE_PRIVATE_KEY = B_PKEY
+
+Configuration.configure(
+    Environment.Sandbox,
+    BRAINTREE_MERCHANT_ID,
+    BRAINTREE_PUBLIC_KEY,
+    BRAINTREE_PRIVATE_KEY
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')

@@ -1,0 +1,47 @@
+<html>
+<body>
+    <h1>Mój sklep</h1>
+    <p>
+        Rachunek nr {{ order.id }}</br>
+        <span class="secondary">
+            {{ order.created|date:"M d, Y" }}
+        </span>
+    </p>
+    <h3>Nabywca</h3>
+        <p>
+            {{ order.first_name }} {{ order.last_name }}<br>
+            {{ order.email }}<br>
+            {{ order.address }}<br>
+            {{ order.postal_code }}, {{ order.city }}
+        </p>
+    <h3>Produkty</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Cena</th>
+                    <th>Ilość</th>
+                    <th>Koszt</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in order.items.all %}
+                <tr class="row{% cycle "1" "2" %}">
+                    <td>{{ item.product.name }}</td>
+                    <td class="num">{{ item.price }} zł</td>
+                    <td class="num">{{ item.quantity }}</td>
+                    <td class="num">{{ item.get_cost }} zł</td>
+                </tr>
+            {% endfor %}
+            <tr class="total">
+                <td colspan="3">Wartość całkowita</td>
+                <td class="num">{{ order.get_total }} zł</td>
+            </tr>
+            </tbody>
+        </table>
+
+    <span class="{% if order.paid %}paid{% else %}pending{% endif %}">
+        {% if order.paid %}Zapłacono{% else %}Oczekiwanie na płatność{% endif %}
+    </span>
+</body>
+</html>
