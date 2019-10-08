@@ -2,7 +2,7 @@ import braintree
 from django.shortcuts import render, redirect, get_object_or_404
 from orders.models import Order
 
-
+# 4111 1111 1111 1111, CVV 123, 12/14
 def payment_process(request):
     order_id = request.session.get('order_id')
     order = get_object_or_404(Order, id=order_id)
@@ -15,7 +15,7 @@ def payment_process(request):
             'amount': '{:.2f}'.format(order.get_total()),
             'payment_method_nonce': nonce,
             'options': {
-                'submit_for_settlement': True
+                'submit_for_settlement': True # aby transakcja została automatycznie przesłana do rozliczenia.
             }
         })
         if result.is_success:
