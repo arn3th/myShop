@@ -1,26 +1,44 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Mój sklep{% endblock %}</title>
+    <title>{% block title %}{% trans "Mój sklep" %}{% endblock %}</title>
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
 </head>
 <body>
     <div id="header">
-        <a href="/" class="logo">Mój sklep</a>
+        <a href="/" class="logo">{% trans "Mój sklep" %}</a>
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        <div class="languages">
+            <p>{% trans "Język" %}:</p>
+            <ul class="languages">
+                {% for language in languages %}
+                    <li>
+                        <a href="/{{ language.code }}/" {% if language.code == LANGUAGE_CODE %} class="selected"{% endif %}>
+                            {{ language.name_local }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     <div id="subheader">
         <div class="cart">
             {% with total_items=cart|length %}
                 {% if cart|length > 0 %}
-                    Koszyk:
+                    {% trans "Koszyk" %}:
                     <a href="{% url 'cart:cart_detail' %}">
-                        {{ total_items }} produkt{{ total_items|pluralize:"y" }},
-                        {{ cart.get_total_price }} zł
+                        {% blocktrans with total_items_plural=total_items|pluralize:"y" total_price=cart.get_total_price %}
+                            {{ total_items }} produkt{{ total_items_plural }},
+                            {{ total_price }} zł
+                        {% endblocktrans %}
                     </a>
                 {% else %}
-                    Koszyk jest pusty.
+                    {% trans "Koszyk jest pusty." %}
                 {% endif %}
             {% endwith %}
         </div>
