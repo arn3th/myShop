@@ -4,7 +4,7 @@ braintree
 amqp==2.5.1
 Babel==2.7.0
 billiard==3.6.1.0
-celery==4.3.0
+celery==5.2.2
 Django==2.0.5
 flower==0.9.3
 importlib-metadata==0.23
